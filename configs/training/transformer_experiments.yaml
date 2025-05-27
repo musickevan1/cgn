@@ -1,0 +1,29 @@
+# Configuration for Transformer Model Experiments
+
+# Experiment 1: Brain Graph Transformer
+transformer_experiment:
+  model_type: transformer
+  model_name: BrainGraphTransformer
+  num_classes: 2
+  learning_rate: 0.0001
+  epochs: 150
+  batch_size: 16
+  gpus: 0 # Set to 1 for GPU training if available
+  log_dir: lightning_logs/transformer_experiments
+  checkpoint_dir: checkpoints/transformer_experiments
+  model_builder: # Placeholder for a function that builds the Transformer model
+    _target_: src.connectome_analysis.models.transformer.transformer_model.BrainGraphTransformer
+    params:
+      input_dim: 116 # Example: number of nodes in connectome
+      d_model: 128
+      nhead: 8
+      num_encoder_layers: 3
+      dim_feedforward: 512
+      dropout: 0.1
+      output_dim: 2 # num_classes
+  trainer_params:
+    early_stopping_patience: 20
+  data_module_params:
+    split_type: stratified_kfold
+    n_splits: 5
+    random_state: 42

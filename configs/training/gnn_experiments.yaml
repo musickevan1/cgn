@@ -1,0 +1,54 @@
+# Configuration for GNN Model Experiments
+
+# Experiment 1: Graph Convolutional Network (GCN)
+gcn_experiment:
+  model_type: gnn
+  model_name: GCN
+  num_classes: 2
+  learning_rate: 0.001
+  epochs: 100
+  batch_size: 64
+  gpus: 0 # Set to 1 for GPU training if available
+  log_dir: lightning_logs/gnn_experiments
+  checkpoint_dir: checkpoints/gnn_experiments
+  model_builder: # Placeholder for a function that builds the GCN model
+    _target_: src.connectome_analysis.models.gnn_models.GCNClassifier
+    params:
+      in_channels: 116 # Example: number of nodes in connectome
+      hidden_channels: 64
+      num_layers: 2
+      out_channels: 2 # num_classes
+      dropout: 0.3
+  trainer_params:
+    early_stopping_patience: 15
+  data_module_params:
+    split_type: stratified_kfold
+    n_splits: 5
+    random_state: 42
+
+# Experiment 2: Graph Attention Network (GAT)
+gat_experiment:
+  model_type: gnn
+  model_name: GAT
+  num_classes: 2
+  learning_rate: 0.0005
+  epochs: 100
+  batch_size: 64
+  gpus: 0
+  log_dir: lightning_logs/gnn_experiments
+  checkpoint_dir: checkpoints/gnn_experiments
+  model_builder: # Placeholder for a function that builds the GAT model
+    _target_: src.connectome_analysis.models.gnn_models.GATClassifier
+    params:
+      in_channels: 116 # Example: number of nodes in connectome
+      hidden_channels: 64
+      num_layers: 2
+      out_channels: 2 # num_classes
+      heads: 4
+      dropout: 0.3
+  trainer_params:
+    early_stopping_patience: 15
+  data_module_params:
+    split_type: stratified_kfold
+    n_splits: 5
+    random_state: 42

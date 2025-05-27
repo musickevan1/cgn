@@ -1,0 +1,95 @@
+# Configuration for Hyperparameter Optimization Studies
+
+# Study 1: Baseline Model Optimization (Logistic Regression)
+lr_optimization_study:
+  study_name: lr_opt_study
+  model_type: baseline
+  model_name: LogisticRegression
+  num_classes: 2
+  n_trials: 50 # Number of Optuna trials
+  gpus: 0
+  log_dir: lightning_logs/optimization_studies
+  checkpoint_dir: checkpoints/optimization_studies
+  model_builder: # Placeholder for a function that builds the LR model
+    _target_: src.connectome_analysis.models.baseline_models.LogisticRegressionClassifier
+  trainer_params:
+    epochs: 50 # Max epochs for each trial
+    early_stopping_patience: 5
+  data_module_params:
+    split_type: stratified_kfold
+    n_splits: 3 # Use fewer splits for faster optimization
+    random_state: 42
+  search_space: # Defined in src/connectome_analysis/optimization/search_spaces.py
+    learning_rate: {"type": "float", "low": 1e-5, "high": 1e-2, "log": True}
+    batch_size: {"type": "categorical", "choices": [16, 32, 64]}
+    model_params.solver: {"type": "categorical", "choices": ["liblinear", "lbfgs"]}
+    model_params.penalty: {"type": "categorical", "choices": ["l1", "l2"]}
+    model_params.C: {"type": "float", "low": 0.1, "high": 10.0, "log": True}
+  objective_weights: # For multi-objective optimization (val_auroc + val_loss)
+    val_auroc: 1.0
+    val_loss: -0.1
+
+# Study 2: GNN Model Optimization (GCN)
+gcn_optimization_study:
+  study_name: gcn_opt_study
+  model_type: gnn
+  model_name: GCN
+  num_classes: 2
+  n_trials: 50
+  gpus: 0
+  log_dir: lightning_logs/optimization_studies
+  checkpoint_dir: checkpoints/optimization_studies
+  model_builder: # Placeholder for a function that builds the GCN model
+    _target_: src.connectome_analysis.models.gnn_models.GCNClassifier
+    params:
+      in_channels: 116 # Example: number of nodes in connectome
+      out_channels: 2 # num_classes
+  trainer_params:
+    epochs: 100
+    early_stopping_patience: 10
+  data_module_params:
+    split_type: stratified_kfold
+    n_splits: 3
+    random_state: 42
+  search_space:
+    learning_rate: {"type": "float", "low": 1e-4, "high": 5e-3, "log": True}
+    batch_size: {"type": "categorical", "choices": [32, 64, 128]}
+    model_params.hidden_channels: {"type": "categorical", "choices": [32, 64, 128]}
+    model_params.num_layers: {"type": "int", "low": 2, "high": 4}
+    model_params.dropout: {"type": "float", "low": 0.2, "high": 0.5}
+  objective_weights:
+    val_auroc: 1.0
+    val_loss: -0.1
+
+# Study 3: Transformer Model Optimization
+transformer_optimization_study:
+  study_name: transformer_opt_study
+  model_type: transformer
+  model_name: BrainGraphTransformer
+  num_classes: 2
+  n_trials: 50
+  gpus: 0
+  log_dir: lightning_logs/optimization_studies
+  checkpoint_dir: checkpoints/optimization_studies
+  model_builder: # Placeholder for a function that builds the Transformer model
+    _target_: src.connectome_analysis.models.transformer.transformer_model.BrainGraphTransformer
+    params:
+      input_dim: 116 # Example: number of nodes in connectome
+      output_dim: 2 # num_classes
+  trainer_params:
+    epochs: 150
+    early_stopping_patience: 15
+  data_module_params:
+    split_type: stratified_kfold
+    n_splits: 3
+    random_state: 42
+  search_space:
+    learning_rate: {"type": "float", "low": 1e-5, "high": 1e-3, "log": True}
+    batch_size: {"type": "categorical", "choices": [16, 32]}
+    model_params.d_model: {"type": "categorical", "choices": [64, 128, 256]}
+    model_params.nhead: {"type": "categorical", "choices": [4, 8]}
+    model_params.num_encoder_layers: {"type": "int", "low": 2, "high": 4}
+    model_params.dropout: {"type": "float", "low": 0.1, "high": 0.3}
+  objective_weights:
+    val_auroc: 1.0
+    val_loss: -0.1

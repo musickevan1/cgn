@@ -1,0 +1,36 @@
+# Data Configuration for CGN Project
+
+# Base directories for data storage
+data_paths:
+  raw: "data/raw"
+  processed: "data/processed"
+  external: "data/external"
+  
+# Dataset specific configurations
+datasets:
+  abide:
+    name: "abide"
+    # nilearn fetcher parameters (example, adjust as needed)
+    fetch_params:
+      pipeline: 'cpac'
+      band_pass_filtering: True
+      global_signal_regression: False
+      derivatives: ['func_preproc']
+      quality_checked: True
+      n_subjects: 30 # Limit for rapid development
+
+# Download settings (placeholders, nilearn handles most of this)
+download_settings:
+  timeout: 300 # seconds
+  retries: 3
+  # Add other settings like bandwidth limits, etc. if needed
+
+# Cache and temporary file locations (nilearn manages its own cache)
+cache_dirs:
+  nilearn_cache: "~/.cache/nilearn" # Default nilearn cache location
+  temp_dir: "/tmp/cgn_temp" # Example temporary directory
+
+# Data organization preferences (currently hardcoded in loaders, but can be configured here)
+organization:
+  neuroimaging_subdir: "neuroimaging"
+  phenotypic_subdir: "phenotypic"

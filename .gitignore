@@ -1,0 +1,72 @@
+# Data files
+data/raw/
+data/processed/
+*.nii.gz
+*.pkl
+*.h5
+
+# Model checkpoints
+models/*/
+*.pth
+*.pt
+
+# Results
+results/figures/
+results/logs/
+lightning_logs/
+*.png
+*.pdf
+*.log
+
+# Data files (additional)
+data/interim/
+*.npy
+*.npz
+*.csv
+*.tsv
+*.sqlite3
+*.db
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Environment
+.env
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# Jupyter
+.ipynb_checkpoints
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db

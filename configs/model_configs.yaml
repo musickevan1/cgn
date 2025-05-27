@@ -1,0 +1,79 @@
+# configs/model_configs.yaml
+
+# Centralized configuration for CGN Phase 4 models, training, and evaluation
+
+data:
+  dataset: "abide"
+  atlas: "aal"  # 116 regions
+  connectivity_method: "correlation"
+  # Add other data loading/preprocessing settings as needed
+  # e.g., data_dir, subjects_list, site_info_path
+
+baseline_models:
+  SVMClassifier: # Updated key to full class name
+    params:
+      C: 1.0
+      kernel: "rbf" # or "linear"
+      probability: True # Required for predict_proba
+    feature_selection:
+      method: "select_k_best" # or "variance_threshold" or null for no selection
+      k: 500 # Number of features for select_k_best
+      threshold: 0.0 # Variance threshold
+  RandomForestClassifier: # Updated key to full class name
+    params:
+      n_estimators: 100
+      max_depth: 10
+    feature_selection: null # Example: No feature selection for RF
+  LogisticRegressionClassifier: # Updated key to full class name
+    params:
+      solver: "liblinear" # Example solver
+      C: 1.0
+    feature_selection: null # Example: No feature selection for LR
+
+gnn_models:
+  BrainGCN: # Updated key to full class name
+    in_channels: 116 # Number of node features (e.g., from preprocessing)
+    hidden_channels: 64 # Changed from hidden_dim
+    out_channels: 32 # Output channels of the GNN base model
+    num_classes: 2 # Number of classes for classification (ASD vs Control)
+  BrainGAT: # Updated key to full class name
+    in_channels: 116 # Number of node features
+    hidden_channels: 64 # Changed from hidden_dim
+    out_channels: 32 # Output channels of the GNN base model
+    heads: 4 # Number of attention heads
+    num_classes: 2 # Number of classes for classification (ASD vs Control)
+
+transformer_models:
+  BrainGraphTransformer:
+    in_channels: 116 # Number of node features
+    d_model: 64 # Dimension of the transformer's internal representation
+    nhead: 4 # Number of attention heads in the transformer encoder
+    num_encoder_layers: 2 # Number of transformer encoder layers
+    dim_feedforward: 128 # Dimension of the feedforward network model
+    dropout: 0.1 # Dropout rate
+    num_classes: 2 # Number of classes for classification (ASD vs Control)
+
+training:
+  model_type: "transformer" # "baseline", "gnn", or "transformer"
+  model_name: "BrainGraphTransformer" # e.g., "SVMClassifier", "RandomForestClassifier", "BrainGCN", "BrainGAT", "BrainGraphTransformer"
+  batch_size: 32
+  learning_rate: 0.001
+  max_epochs: 200
+  patience: 20 # For early stopping
+  optimizer:
+    type: "Adam" # or "SGD"
+    lr: 0.001
+  # Add learning rate scheduler settings if needed
+
+evaluation:
+  cv_method: "loo_site" # "loo_site" or "stratified_k_fold"
+  cv_folds: 5 # Number of folds for stratified_k_fold
+  test_size: 0.2 # Not directly used for LOO-site, but might be for other splits
+  stratify_by_site: true # Ensure stratification respects site boundaries
+  metrics: ["accuracy", "auc", "precision", "recall", "f1"]
+  # Add paths for saving results, plots, etc.
+
+optuna:
+  study_name: "cgn_hpo_study"
+  n_trials: 50
+  # Add other Optuna settings like storage, sampler, pruner

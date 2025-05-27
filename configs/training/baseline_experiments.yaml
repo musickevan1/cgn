@@ -1,0 +1,71 @@
+# Configuration for Baseline Model Experiments
+
+# Experiment 1: Logistic Regression
+logistic_regression_experiment:
+  model_type: baseline
+  model_name: LogisticRegression
+  num_classes: 2
+  learning_rate: 0.001
+  epochs: 50
+  batch_size: 32
+  gpus: 0 # Set to 1 for GPU training if available
+  log_dir: lightning_logs/baseline_experiments
+  checkpoint_dir: checkpoints/baseline_experiments
+  model_builder: # Placeholder for a function that builds the LR model
+    _target_: src.connectome_analysis.models.baseline_models.LogisticRegressionClassifier
+    params:
+      solver: liblinear
+      penalty: l2
+      C: 1.0
+  trainer_params:
+    early_stopping_patience: 10
+  data_module_params:
+    split_type: stratified_kfold
+    n_splits: 5
+    random_state: 42
+
+# Experiment 2: Support Vector Machine (SVM)
+svm_experiment:
+  model_type: baseline
+  model_name: SVM
+  num_classes: 2
+  learning_rate: 0.001
+  epochs: 50
+  batch_size: 32
+  gpus: 0
+  log_dir: lightning_logs/baseline_experiments
+  checkpoint_dir: checkpoints/baseline_experiments
+  model_builder: # Placeholder for a function that builds the SVM model
+    _target_: src.connectome_analysis.models.baseline_models.SVMClassifier
+    params:
+      kernel: linear
+      C: 1.0
+  trainer_params:
+    early_stopping_patience: 10
+  data_module_params:
+    split_type: stratified_kfold
+    n_splits: 5
+    random_state: 42
+
+# Experiment 3: Random Forest
+random_forest_experiment:
+  model_type: baseline
+  model_name: RandomForest
+  num_classes: 2
+  learning_rate: 0.001 # Not directly used by RF, but kept for consistency
+  epochs: 50 # Not directly used by RF, but kept for consistency
+  batch_size: 32 # Not directly used by RF, but kept for consistency
+  gpus: 0
+  log_dir: lightning_logs/baseline_experiments
+  checkpoint_dir: checkpoints/baseline_experiments
+  model_builder: # Placeholder for a function that builds the RF model
+    _target_: src.connectome_analysis.models.baseline_models.RandomForestClassifier
+    params:
+      n_estimators: 100
+      max_depth: 10
+  trainer_params:
+    early_stopping_patience: 10
+  data_module_params:
+    split_type: stratified_kfold
+    n_splits: 5
+    random_state: 42
