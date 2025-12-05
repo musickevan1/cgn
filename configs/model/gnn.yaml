@@ -1,0 +1,10 @@
+# GNN Model Configuration
+_target_: cgn.models.gnn.GNN
+
+in_channels: 1  # Will be inferred dynamically if possible, but good to have default
+hidden_channels: 64
+out_channels: 2  # Binary classification (e.g., ASD vs Control)
+num_layers: 3
+dropout: 0.5
+lr: 0.001
+weight_decay: 5e-4

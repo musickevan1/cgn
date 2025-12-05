@@ -5,7 +5,7 @@ channels:
   - conda-forge
   - defaults
 dependencies:
-  - python=3.9
+  - python=3.10
   - pytorch>=2.0.0
   - torchvision
   - torchaudio
@@ -15,7 +15,8 @@ dependencies:
   - pip:
     - torch-geometric
     - pytorch-lightning
-    - transformers
+    - hydra-core
+    - omegaconf
     - nilearn
     - nibabel
     - networkx
@@ -25,8 +26,6 @@ dependencies:
     - seaborn
     - plotly
     - scipy
-    - statsmodels
-    - pyyaml
     - tqdm
     - jupyter
     - ipykernel
