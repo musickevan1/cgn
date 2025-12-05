@@ -1,0 +1,10 @@
+defaults:
+  - _self_
+  - model: gnn
+  - data: abide
+  - trainer: default
+
+# Global settings
+seed: 42
+experiment_name: "cgn_baseline"
+debug: false

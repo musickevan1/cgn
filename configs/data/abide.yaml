@@ -1,0 +1,9 @@
+# ABIDE Data Module Configuration
+_target_: cgn.data.abide_datamodule.ABIDEDataModule
+
+root: "./data/ABIDE"
+batch_size: 32
+num_workers: 4
+use_synthetic: true  # Start with synthetic data for development
+node_feature_dim: 1  # For synthetic data
+num_nodes: 100 # For synthetic data
